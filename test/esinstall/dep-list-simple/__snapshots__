@@ -8,11 +8,78 @@ Array [
 `;
 
 exports[`dep-list-simple matches the snapshot: cli output 1`] = `
-"[snowpack] ! installing dependencies...
-[snowpack] ✔ install complete!
-[snowpack]
-  ⦿ web_modules/     size       gzip       brotli
-    └─ async.js    XXXX KB    XXXX KB    XXXX KB"
+"running installer with options: {
+  input: {
+    async: 'XHOMEX/node_modules/async/dist/async.mjs'
+  },
+  context: undefined,
+  external: [Function: external],
+  treeshake: { moduleSideEffects: 'no-external' },
+  plugins: [
+    { name: 'alias', resolveId: [Function: noop] },
+    {
+      name: 'snowpack:fetch-handler',
+      resolveId: [Function: resolveId],
+      load: [Function: load]
+    },
+    {
+      name: 'node-resolve',
+      buildStart: [Function: buildStart],
+      generateBundle: [Function: generateBundle],
+      resolveId: [AsyncFunction: resolveId],
+      load: [Function: load],
+      getPackageInfoForId: [Function: getPackageInfoForId]
+    },
+    { name: 'json', transform: [Function: transform] },
+    {
+      name: 'snowpack:rollup-plugin-css',
+      transform: [AsyncFunction: transform]
+    },
+    {
+      name: 'replace',
+      renderChunk: [Function: renderChunk],
+      transform: [Function: transform]
+    },
+    {
+      name: 'commonjs',
+      buildStart: [Function: buildStart],
+      resolveId: [Function: resolveId],
+      load: [Function: load],
+      transform: [Function: transform],
+      moduleParsed: [Function: moduleParsed]
+    },
+    {
+      name: 'snowpack:wrap-install-targets',
+      buildStart: [Function: buildStart],
+      resolveId: [Function: resolveId],
+      load: [Function: load]
+    },
+    {
+      name: 'snowpack:rollup-plugin-stats',
+      generateBundle: [Function: generateBundle],
+      writeBundle: [Function: writeBundle]
+    },
+    {
+      name: 'snowpack:rollup-plugin-node-process-polyfill',
+      transform: [Function: transform],
+      resolveId: [Function: resolveId],
+      load: [Function: load]
+    },
+    {
+      name: 'snowpack:rollup-plugin-catch-unresolved',
+      resolveId: [Function: resolveId]
+    },
+    {
+      name: 'snowpack:rollup-plugin-strip-source-mapping',
+      transform: [Function: transform]
+    }
+  ],
+  onwarn: [Function: onwarn]
+}
+cjsAutoDetectExportsUntrusted error: Unexpected export statement in CJS module.
+installing npm packages:
+    async
+writing install results to disk"
 `;
 
 exports[`dep-list-simple matches the snapshot: web_modules/async.js 1`] = `

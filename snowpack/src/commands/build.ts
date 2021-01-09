@@ -1,4 +1,3 @@
-import merge from 'deepmerge';
 import {promises as fs} from 'fs';
 import glob from 'glob';
 import * as colors from 'kleur/colors';
@@ -80,29 +79,34 @@ async function installOptimizedDependencies(
   installDest: string,
   commandOptions: CommandOptions,
 ) {
-  const installConfig = merge(commandOptions.config, {
-    installOptions: {
-      dest: installDest,
-      env: {NODE_ENV: process.env.NODE_ENV || 'production'},
-      treeshake: commandOptions.config.buildOptions.watch
-        ? false
-        : commandOptions.config.installOptions.treeshake ?? true,
-    },
-  });
+  const baseInstallOptions = {
+    dest: installDest,
+    external: commandOptions.config.packageOptions.external,
+    env: {NODE_ENV: process.env.NODE_ENV || 'production'},
+    treeshake: commandOptions.config.buildOptions.watch
+      ? false
+      : commandOptions.config.optimize?.treeshake !== false,
+  };
 
   const pkgSource = getPackageSource(commandOptions.config.packageOptions.source);
-  pkgSource.modifyBuildInstallConfig({config: installConfig, lockfile: commandOptions.lockfile});
+  const installOptions = pkgSource.modifyBuildInstallOptions({
+    installOptions: baseInstallOptions,
+    config: commandOptions.config,
+    lockfile: commandOptions.lockfile,
+  });
 
+  // 1. Scan imports from your final built JS files.
   // Unlike dev (where we scan from source code) the built output guarantees that we
   // will can scan all used entrypoints. Set to `[]` to improve tree-shaking performance.
-  installConfig.knownEntrypoints = [];
-  // 1. Scan imports from your final built JS files.
-  const installTargets = await getInstallTargets(installConfig, scannedFiles);
+  const installTargets = await getInstallTargets(
+    {...commandOptions.config, knownEntrypoints: []},
+    scannedFiles,
+  );
   // 2. Install dependencies, based on the scan of your final build.
   const installResult = await installRunner({
-    ...commandOptions,
     installTargets,
-    config: installConfig,
+    installOptions,
+    config: commandOptions.config,
     shouldPrintStats: false,
     shouldWriteLockfile: false,
   });
@@ -147,7 +151,7 @@ class FileBuilder {
 
   async buildFile() {
     this.filesToResolve = {};
-    const isSSR = this.config.experiments.ssr;
+    const isSSR = this.config.buildOptions.ssr;
     const srcExt = path.extname(url.fileURLToPath(this.fileURL));
     const fileOutput = this.mountEntry.static
       ? {[srcExt]: {code: await readFile(this.fileURL)}}
@@ -268,12 +272,12 @@ class FileBuilder {
           return resolvedImportUrl;
         }
         // Ignore packages marked as external
-        if (this.config.installOptions.externalPackage?.includes(resolvedImportUrl)) {
+        if (this.config.packageOptions.external?.includes(resolvedImportUrl)) {
           return resolvedImportUrl;
         }
         // Handle normal "./" & "../" import specifiers
         const importExtName = path.extname(resolvedImportUrl);
-        const isBundling = !!this.config.experiments.optimize?.bundle;
+        const isBundling = !!this.config.optimize?.bundle;
         const isProxyImport =
           importExtName &&
           importExtName !== '.js' &&
@@ -345,7 +349,7 @@ class FileBuilder {
 export async function buildProject(commandOptions: CommandOptions): Promise<SnowpackBuildResult> {
   const {config, lockfile} = commandOptions;
   const isDev = !!config.buildOptions.watch;
-  const isSSR = !!config.experiments.ssr;
+  const isSSR = !!config.buildOptions.ssr;
 
   // Fill in any command-specific plugin methods.
   // NOTE: markChanged only needed during dev, but may not be true for all.
@@ -430,7 +434,7 @@ export async function buildProject(commandOptions: CommandOptions): Promise<Snow
       follow: true,
     });
 
-    if (!config.experiments.optimize?.bundle) {
+    if (!config.optimize?.bundle) {
       for (const installedFileLoc of allFiles) {
         if (
           !installedFileLoc.endsWith('import-map.json') &&
@@ -559,14 +563,14 @@ export async function buildProject(commandOptions: CommandOptions): Promise<Snow
 
   // 5. Optimize the build.
   if (!config.buildOptions.watch) {
-    if (config.experiments.optimize || config.plugins.some((p) => p.optimize)) {
+    if (config.optimize || config.plugins.some((p) => p.optimize)) {
       const optimizeStart = performance.now();
       logger.info(colors.yellow('! optimizing build...'));
       await runBuiltInOptimize(config);
       await runPipelineOptimizeStep(buildDirectoryLoc, {
         config,
         isDev: false,
-        isSSR: config.experiments.ssr,
+        isSSR: config.buildOptions.ssr,
         isHmrEnabled: false,
       });
       const optimizeEnd = performance.now();

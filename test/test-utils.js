@@ -26,16 +26,6 @@ function getFile(results, TEST_OUT, id) {
 }
 exports.getFile = getFile;
 
-/** steup for /tests/esinstall/* */
-async function setupEsinstallTest(cwd) {
-  return await execa('yarn', ['--silent', 'run', 'testinstall'], {
-    cwd,
-    reject: false,
-    all: true,
-  });
-}
-exports.setupEsinstallTest = setupEsinstallTest;
-
 /** read a directory of files */
 function readFiles(directory, {ignore} = {}) {
   if (!directory) throw new Error(`must specify directory`);

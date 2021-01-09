@@ -87,17 +87,12 @@ export default {
     return {imports: {}};
   },
 
-  async modifyBuildInstallConfig({
-    config,
-    lockfile,
-  }: {
-    config: SnowpackConfig;
-    lockfile: LockfileManifest | null;
-  }) {
-    config.installOptions.lockfile = lockfile || undefined;
-    config.installOptions.rollup = config.installOptions.rollup || {};
-    config.installOptions.rollup.plugins = config.installOptions.rollup.plugins || [];
-    config.installOptions.rollup.plugins.push(rollupPluginSkypack({}) as Plugin);
+  modifyBuildInstallOptions({installOptions}) {
+    installOptions.rollup = installOptions.rollup || {};
+    installOptions.rollup.plugins = installOptions.rollup.plugins || [];
+    installOptions.rollup.plugins.push(rollupPluginSkypack({}) as Plugin);
+    // config.installOptions.lockfile = lockfile || undefined;
+    return installOptions;
   },
 
   async load(

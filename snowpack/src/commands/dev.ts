@@ -748,7 +748,7 @@ export async function startDevServer(commandOptions: CommandOptions): Promise<Sn
             return resolvedImportUrl;
           }
           // Ignore packages marked as external
-          if (config.installOptions.externalPackage?.includes(resolvedImportUrl)) {
+          if (config.packageOptions.external?.includes(resolvedImportUrl)) {
             return spec;
           }
           // Handle normal "./" & "../" import specifiers
@@ -778,7 +778,7 @@ export async function startDevServer(commandOptions: CommandOptions): Promise<Sn
         // Only retry once, to prevent an infinite loop when a package doesn't actually exist.
         if (retryMissing) {
           try {
-            sourceImportMap = await pkgSource.recoverMissingPackageImport(missingPackages);
+            sourceImportMap = await pkgSource.recoverMissingPackageImport(missingPackages, config);
             return resolveResponseImports(fileLoc, responseExt, wrappedResponse, false);
           } catch (err) {
             const errorTitle = `Dependency Install Error`;
@@ -1105,7 +1105,7 @@ export async function startDevServer(commandOptions: CommandOptions): Promise<Sn
     let reqPath = decodeURI(url.parse(reqUrl).pathname!);
     const reqExt = path.extname(reqPath);
     const isRoute = !reqExt || reqExt.toLowerCase() === '.html';
-    for (const route of config.experiments.routes) {
+    for (const route of config.routes) {
       if (route.match === 'routes' && !isRoute) {
         continue;
       }

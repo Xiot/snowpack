@@ -15,7 +15,7 @@ describe('source-map-strip', () => {
     if (existsPackageJson(cwd) === false) return;
 
     // Run Test
-    const {output, snapshotFile} = await runTest(cwd);
+    const {output, snapshotFile} = await runTest(['@auth0/auth0-spa-js'], {cwd});
 
     // Test output
     expect(output).toMatchSpecificSnapshot(snapshotFile, 'cli output');
