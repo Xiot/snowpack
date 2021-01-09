@@ -27,7 +27,10 @@ const DEV_DEPENDENCIES_DIR = path.join(PROJECT_CACHE_DIR, process.env.NODE_ENV |
  * and then updates the "hash" file used to check node_modules freshness.
  */
 async function installDependencies(config: SnowpackConfig) {
-  const installTargets = await getInstallTargets(config);
+  const installTargets = await getInstallTargets(
+    config,
+    config.packageOptions.source === 'local' ? config.packageOptions.knownEntrypoints : [],
+  );
   if (installTargets.length === 0) {
     logger.info('Nothing to install.');
     return;

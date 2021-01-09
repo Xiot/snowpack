@@ -69,6 +69,7 @@ export const DEFAULT_PACKAGES_LOCAL_CONFIG: PackageSourceLocal = {
   source: 'local',
   external: [],
   packageLookupFields: [],
+  knownEntrypoints: [],
 };
 
 const DEFAULT_PACKAGES_SKYPACK_CONFIG: PackageSourceSkypack = {
@@ -397,7 +398,6 @@ function normalizeConfig(_config: SnowpackUserConfig): SnowpackConfig {
   // SnowpackUserConfig type, we can have this function construct a fresh config object
   // from scratch instead of trying to modify the user's config object in-place.
   let config: SnowpackConfig = (_config as any) as SnowpackConfig;
-  config.knownEntrypoints = (config as any).install || [];
   if (config.packageOptions.source === 'local') {
     config.packageOptions.cwd = config.root;
     config.packageOptions.rollup = config.packageOptions.rollup || {};
@@ -439,8 +439,10 @@ function normalizeConfig(_config: SnowpackUserConfig): SnowpackConfig {
 
   // If any plugins defined knownEntrypoints, add them here
   for (const {knownEntrypoints} of config.plugins) {
-    if (knownEntrypoints) {
-      config.knownEntrypoints = config.knownEntrypoints.concat(knownEntrypoints);
+    if (knownEntrypoints && config.packageOptions.source === 'local') {
+      config.packageOptions.knownEntrypoints = config.packageOptions.knownEntrypoints.concat(
+        knownEntrypoints,
+      );
     }
   }
 
@@ -480,6 +482,21 @@ function valdiateDeprecatedConfig(rawConfig: any) {
   }
   if (rawConfig.installOptions) {
     handleDeprecatedConfigError('[v3.0] "config.installOptions" is now "config.packageOptions".');
+  }
+  if (rawConfig.packageOptions?.externalPackage) {
+    handleDeprecatedConfigError(
+      '[v3.0] "config.installOptions.externalPackage" is now "config.packageOptions.external".',
+    );
+  }
+  if (rawConfig.packageOptions?.treeshake) {
+    handleDeprecatedConfigError(
+      '[v3.0] "config.installOptions.treeshake" is now "config.optimize.treeshake".',
+    );
+  }
+  if (rawConfig.install) {
+    handleDeprecatedConfigError(
+      '[v3.0] "config.install" is now "config.packageOptions.knownEntrypoints".',
+    );
   }
   if (rawConfig.experiments?.source) {
     handleDeprecatedConfigError(

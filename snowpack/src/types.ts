@@ -198,6 +198,7 @@ export interface RouteConfigObject {
 export interface PackageSourceLocal extends Omit<EsinstallOptions, 'alias' | 'dest'> {
   source: 'local';
   external: string[];
+  knownEntrypoints: string[];
 }
 
 export interface PackageSourceSkypack {
@@ -210,10 +211,8 @@ export interface PackageSourceSkypack {
 // interface this library uses internally
 export interface SnowpackConfig {
   root: string;
-  install: string[];
   extends?: string;
   exclude: string[];
-  knownEntrypoints: string[];
   mount: Record<string, MountEntry>;
   alias: Record<string, string>;
   plugins: SnowpackPlugin[];

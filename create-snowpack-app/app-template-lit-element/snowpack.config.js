@@ -5,9 +5,6 @@ module.exports = {
     src: {url: '/dist'},
   },
   plugins: ['@snowpack/plugin-babel', '@snowpack/plugin-dotenv'],
-  install: [
-    /* ... */
-  ],
   packageOptions: {
     /* ... */
   },

@@ -98,10 +98,7 @@ async function installOptimizedDependencies(
   // 1. Scan imports from your final built JS files.
   // Unlike dev (where we scan from source code) the built output guarantees that we
   // will can scan all used entrypoints. Set to `[]` to improve tree-shaking performance.
-  const installTargets = await getInstallTargets(
-    {...commandOptions.config, knownEntrypoints: []},
-    scannedFiles,
-  );
+  const installTargets = await getInstallTargets(commandOptions.config, [], scannedFiles);
   // 2. Install dependencies, based on the scan of your final build.
   const installResult = await installRunner({
     installTargets,

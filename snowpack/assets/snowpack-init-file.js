@@ -9,9 +9,6 @@ module.exports = {
   plugins: [
     /* ... */
   ],
-  install: [
-    /* ... */
-  ],
   packageOptions: {
     /* ... */
   },

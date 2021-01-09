@@ -9,9 +9,6 @@ module.exports = {
     '@snowpack/plugin-typescript',
     '@prefresh/snowpack',
   ],
-  install: [
-    /* ... */
-  ],
   packageOptions: {
     /* ... */
   },

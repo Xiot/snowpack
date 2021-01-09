@@ -798,8 +798,8 @@ export async function startDevServer(commandOptions: CommandOptions): Promise<Sn
         // eventually saw post-build. In that case, you need to add it manually.
         const errorTitle = `Error: Import "${missingPackages[0]}" could not be resolved.`;
         const errorMessage = `If this import doesn't exist in the source file, add ${colors.bold(
-          `"install": ["${missingPackages[0]}"]`,
-        )} to your Snowpack config file.`;
+          `"knownEntrypoints": ["${missingPackages[0]}"]`,
+        )} to your Snowpack config "packageOptions".`;
         logger.error(`${errorTitle}\n${errorMessage}`);
         hmrEngine.broadcastMessage({
           type: 'error',
