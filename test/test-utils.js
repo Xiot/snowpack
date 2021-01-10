@@ -7,7 +7,7 @@ const execa = require('execa');
 const STRIP_CHUNKHASH = /([\w\-]+\-)[a-z0-9]{8}(\.js)/g;
 const STRIP_REV = /\?rev=\w+/gm;
 const STRIP_WHITESPACE = /((\s+$)|((\\r\\n)|(\\n)))/gm;
-const UTF8_FRIENDLY_EXTS = ['css', 'html', 'js', 'jsx', 'ts', 'tsx', 'svelte', 'svg', 'vue']; // only read non-binary files (add more exts here as needed)
+const UTF8_FRIENDLY_EXTS = ['css', 'html', 'js', 'jsx', 'ts', 'tsx', 'svelte', 'svg', 'vue', 'json']; // only read non-binary files (add more exts here as needed)
 
 /** setup for /tests/build/* */
 function setupBuildTest(cwd) {

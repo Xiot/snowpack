@@ -391,7 +391,9 @@ ${colors.dim(
   }
 
   mkdirp.sync(destLoc);
+  console.error('DESTLOC', destLoc, path.join(destLoc, 'import-map.json'), importMap);
   await writeLockfile(path.join(destLoc, 'import-map.json'), importMap);
+  console.error('WRITTEN!');
   for (const [assetName, assetLoc] of Object.entries(assetEntrypoints)) {
     const assetDest = `${destLoc}/${sanitizePackageName(assetName)}`;
     mkdirp.sync(path.dirname(assetDest));

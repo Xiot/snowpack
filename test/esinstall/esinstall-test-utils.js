@@ -69,7 +69,7 @@ function testWebModules(cwd, snapshotFile, {throwIfNoWebModules} = defaultWebMod
     cwd: actual,
     nodir: true,
   });
-
+  console.error(allFiles);
   if (allFiles.length === 0 && throwIfNoWebModules) {
     throw new Error('Empty build directory!');
   }
