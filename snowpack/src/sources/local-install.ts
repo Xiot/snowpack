@@ -6,12 +6,10 @@ import {
   printStats,
 } from 'esinstall';
 import * as colors from 'kleur/colors';
-import path from 'path';
 import {performance} from 'perf_hooks';
 import util from 'util';
 import {logger} from '../logger';
 import {ImportMap, SnowpackConfig} from '../types';
-import {writeLockfile} from '../util.js';
 
 interface InstallRunOptions {
   config: SnowpackConfig;

@@ -53,7 +53,7 @@ async function testLockFile(cwd) {
   if (existsSync(expectedLockLoc)) {
     const expectedLock = await fs.readFile(expectedLockLoc, {encoding: 'utf8'});
 
-    const actualLockLoc = path.join(__dirname, 'snowpack.lock.json');
+    const actualLockLoc = path.join(__dirname, LOCKFILE_NAME);
     const actualLock = await fs.readFile(actualLockLoc, {encoding: 'utf8'});
 
     expect(stripLockfile(actualLock)).toBe(stripLockfile(expectedLock));

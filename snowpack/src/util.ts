@@ -15,6 +15,7 @@ import skypackPackageSource from './sources/skypack';
 import {LockfileManifest, PackageSource, SnowpackConfig} from './types';
 
 export const GLOBAL_CACHE_DIR = globalCacheDir('snowpack');
+export const LOCKFILE_NAME = 'snowpack.deps.json';
 
 // We need to use eval here to prevent Rollup from detecting this use of `require()`
 export const NATIVE_REQUIRE = eval('require');
@@ -59,7 +60,7 @@ export async function readFile(filepath: URL): Promise<string | Buffer> {
 
 export async function readLockfile(cwd: string): Promise<LockfileManifest | null> {
   try {
-    var lockfileContents = fs.readFileSync(path.join(cwd, 'snowpack.lock.json'), {
+    var lockfileContents = fs.readFileSync(path.join(cwd, LOCKFILE_NAME), {
       encoding: 'utf8',
     });
   } catch (err) {

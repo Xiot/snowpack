@@ -18,7 +18,7 @@ import rimraf from 'rimraf';
 
 const fetchedPackages = new Set<string>();
 function logFetching(packageName: string, tag: string = '') {
-  if (fetchedPackages.has(packageName+':::'+tag)) {
+  if (fetchedPackages.has(packageName + ':::' + tag)) {
     return;
   }
   fetchedPackages.add(packageName);
@@ -84,8 +84,10 @@ export default {
       ).catch(() => 'thats fine!');
     }
     // Skypack resolves imports on the fly, so no import map needed.
-      logger.info(`TypeScript types installed to ${colors.bold('.snowpack/types')}.`, {name: 'skypack.types'});
-      return {imports: {}};
+    logger.info(`TypeScript types installed to ${colors.bold('.snowpack/types')}.`, {
+      name: 'skypack.types',
+    });
+    return {imports: {}};
   },
 
   modifyBuildInstallOptions({installOptions}) {

@@ -652,7 +652,7 @@ function resolveRelativeConfig(config: SnowpackUserConfig, configBase: string): 
 }
 
 class ConfigValidationError extends Error {
-  constructor(errors: (Error|string)[]) {
+  constructor(errors: (Error | string)[]) {
     super(`Configuration Error:\n${errors.map((err) => `  - ${err.toString()}`).join(os.EOL)}`);
   }
 }
@@ -660,7 +660,9 @@ class ConfigValidationError extends Error {
 function validateConfig(config: SnowpackConfig) {
   for (const mountDir of Object.keys(config.mount)) {
     if (!existsSync(mountDir)) {
-      throw new ConfigValidationError([`config.mount[${mountDir}]: directory does not exist, and cannot be mounted.`]);
+      throw new ConfigValidationError([
+        `config.mount[${mountDir}]: directory does not exist, and cannot be mounted.`,
+      ]);
     }
   }
 }
