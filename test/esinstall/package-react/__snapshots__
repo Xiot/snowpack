@@ -12,7 +12,7 @@ exports[`package-react matches the snapshot: cli output 1`] = `
 "running installer with options: {
   input: {
     react: 'XHOMEX/test/esinstall/package-react/node_modules/react/index.js',
-    'react-dom': '/Users/fks/Code/snowpack/test/esinstall/package-react/node_modules/react-dom/index.js'
+    'react-dom': 'XHOMEX/test/esinstall/package-react/node_modules/react-dom/index.js'
   },
   context: undefined,
   external: [Function: external],

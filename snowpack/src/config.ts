@@ -652,8 +652,16 @@ function resolveRelativeConfig(config: SnowpackUserConfig, configBase: string): 
 }
 
 class ConfigValidationError extends Error {
-  constructor(errors: Error[]) {
+  constructor(errors: (Error|string)[]) {
     super(`Configuration Error:\n${errors.map((err) => `  - ${err.toString()}`).join(os.EOL)}`);
+  }
+}
+
+function validateConfig(config: SnowpackConfig) {
+  for (const mountDir of Object.keys(config.mount)) {
+    if (!existsSync(mountDir)) {
+      throw new ConfigValidationError([`config.mount[${mountDir}]: directory does not exist, and cannot be mounted.`]);
+    }
   }
 }
 
@@ -689,7 +697,9 @@ export function createConfiguration(config: SnowpackUserConfig = {}): SnowpackCo
   // But, we still need to run it in case you called this function directly.
   const configBase = getConfigBasePath(undefined, config.root);
   resolveRelativeConfig(mergedConfig, configBase);
-  return normalizeConfig(mergedConfig);
+  const normalizedConfig = normalizeConfig(mergedConfig);
+  validateConfig(normalizedConfig);
+  return normalizedConfig;
 }
 
 function loadConfigurationFile(

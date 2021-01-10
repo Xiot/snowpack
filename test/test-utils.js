@@ -121,7 +121,8 @@ exports.stripSvelteComment = stripSvelteComment;
 
 /** strip away the home path */
 function stripHomePath(stdout) {
-  return stdout.replace(process.cwd(), 'XHOMEX').replace(/\\/g, '/');
+  // Use the split->join trick to replace all instances of a string instead of just the first one
+  return stdout.split(process.cwd()).join('XHOMEX').replace(/\\/g, '/');
 }
 exports.stripHomePath = stripHomePath;
 
