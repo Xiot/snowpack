@@ -18,7 +18,7 @@ export async function addCommand(addValue: string, commandOptions: CommandOption
   logger.info(
     `adding ${cyan(
       underline(`https://cdn.skypack.dev/${pkgName}@${pkgSemver}`),
-    )} to your project lockfile. ${dim('(snowpack.lock.json)')}`,
+    )} to your project lockfile. ${dim('(snowpack.deps.json)')}`,
   );
   const addedDependency = {[pkgName]: pkgSemver};
   const newLockfile: LockfileManifest = {
@@ -28,7 +28,7 @@ export async function addCommand(addValue: string, commandOptions: CommandOption
       ...addedDependency,
     },
   };
-  await writeLockfile(path.join(config.root, 'snowpack.lock.json'), newLockfile);
+  await writeLockfile(path.join(config.root, 'snowpack.deps.json'), newLockfile);
 }
 
 export async function rmCommand(addValue: string, commandOptions: CommandOptions) {
@@ -40,5 +40,5 @@ export async function rmCommand(addValue: string, commandOptions: CommandOptions
     dependencies: lockfile?.dependencies ?? {},
   };
   delete newLockfile.dependencies[pkgName];
-  await writeLockfile(path.join(config.root, 'snowpack.lock.json'), newLockfile);
+  await writeLockfile(path.join(config.root, 'snowpack.deps.json'), newLockfile);
 }

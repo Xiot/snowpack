@@ -372,6 +372,7 @@ ${colors.dim(
       logger.debug(`writing install results to disk`);
       await packageBundle.write(outputOptions);
     } catch (_err) {
+      logger.debug(`FAILURE: ${_err}`);
       const err: RollupError = _err;
       const errFilePath = err.loc?.file || err.id;
       if (!errFilePath) {

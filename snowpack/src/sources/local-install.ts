@@ -17,7 +17,6 @@ interface InstallRunOptions {
   config: SnowpackConfig;
   installOptions: EsinstallOptions;
   installTargets: InstallTarget[];
-  shouldWriteLockfile: boolean;
   shouldPrintStats: boolean;
 }
 
@@ -31,20 +30,8 @@ export async function run({
   config,
   installOptions,
   installTargets,
-  shouldWriteLockfile,
   shouldPrintStats,
 }: InstallRunOptions): Promise<InstallRunResult> {
-  // start
-  const installStart = performance.now();
-  // logger.info(
-  //   colors.yellow(
-  //     '! installing dependencies...' +
-  //       colors.cyan(
-  //         config.packageOptions.source === 'local' ? '' : ` (source: ${config.packageOptions.source})`,
-  //       ),
-  //   ),
-  // );
-
   if (installTargets.length === 0) {
     return {
       importMap: {imports: {}} as ImportMap,
@@ -52,6 +39,9 @@ export async function run({
       stats: null,
     };
   }
+  // start
+  const installStart = performance.now();
+  logger.info(colors.yellow('! optimizing dependencies...'));
 
   let newLockfile: ImportMap | null = null;
   const finalResult = await install(installTargets, {
@@ -66,22 +56,14 @@ export async function run({
     },
     ...installOptions,
   });
-
-  logger.debug('Install ran successfully!');
-  if (shouldWriteLockfile && newLockfile) {
-    await writeLockfile(path.join(config.root, 'snowpack.lock.json'), newLockfile);
-    logger.debug('Successfully wrote lockfile');
-  }
+  logger.debug('Successfully ran esinstall.');
 
   // finish
   const installEnd = performance.now();
-  const depList = (finalResult.importMap && Object.keys(finalResult.importMap.imports)) || [];
   logger.info(
-    `${
-      depList.length
-        ? colors.green(`✔`) + ' install complete!'
-        : 'install skipped (nothing to install)'
-    } ${colors.dim(`[${((installEnd - installStart) / 1000).toFixed(2)}s]`)}`,
+    `${colors.green(`✔`) + ' optimize complete!'} ${colors.dim(
+      `[${((installEnd - installStart) / 1000).toFixed(2)}s]`,
+    )}`,
   );
 
   if (shouldPrintStats && finalResult.stats) {

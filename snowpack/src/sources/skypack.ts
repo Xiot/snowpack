@@ -17,13 +17,13 @@ import {isJavaScript} from '../util';
 import rimraf from 'rimraf';
 
 const fetchedPackages = new Set<string>();
-function logFetching(packageName: string) {
-  if (fetchedPackages.has(packageName)) {
+function logFetching(packageName: string, tag: string = '') {
+  if (fetchedPackages.has(packageName+':::'+tag)) {
     return;
   }
   fetchedPackages.add(packageName);
   logger.info(
-    `Fetching latest ${colors.bold(packageName)} ${colors.dim(
+    `Fetching ${tag} ${colors.bold(packageName)} ${colors.dim(
       `→ ${SKYPACK_ORIGIN}/${packageName}`,
     )}`,
     {name: 'source:skypack'},
@@ -54,7 +54,6 @@ export default {
     }
     const dependenciesList = lockfile && (Object.keys(lockfile.dependencies) as string[]);
     if (!lockfile || !dependenciesList || dependenciesList.length === 0) {
-      logger.debug('No types to install.');
       return {imports: {}};
     }
 
@@ -70,13 +69,14 @@ export default {
     ];
     if (JSON.stringify(allTypesFolders.sort()) === JSON.stringify(dependenciesList.sort())) {
       // we are up to date, ignore
+      logger.info('TypeScript types already up-to-date.', {name: 'skypack.types'});
       return {imports: {}};
     } else {
       await rimraf.sync(path.join(this.getCacheFolder(config), '.snowpack/types'));
     }
 
     for (const packageName of dependenciesList) {
-      logFetching(packageName);
+      logFetching(packageName, colors.bold('types') + ' for');
       await installTypes(
         packageName,
         lockfile.dependencies[packageName],
@@ -84,7 +84,8 @@ export default {
       ).catch(() => 'thats fine!');
     }
     // Skypack resolves imports on the fly, so no import map needed.
-    return {imports: {}};
+      logger.info(`TypeScript types installed to ${colors.bold('.snowpack/types')}.`, {name: 'skypack.types'});
+      return {imports: {}};
   },
 
   modifyBuildInstallOptions({installOptions}) {

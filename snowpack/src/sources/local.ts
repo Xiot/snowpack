@@ -40,8 +40,7 @@ async function installDependencies(config: SnowpackConfig) {
     config,
     installTargets,
     installOptions,
-    shouldPrintStats: true,
-    shouldWriteLockfile: false,
+    shouldPrintStats: false,
   });
   await updateLockfileHash(DEV_DEPENDENCIES_DIR);
   return installResult;

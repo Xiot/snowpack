@@ -105,7 +105,6 @@ async function installOptimizedDependencies(
     installOptions,
     config: commandOptions.config,
     shouldPrintStats: false,
-    shouldWriteLockfile: false,
   });
   return installResult;
 }
