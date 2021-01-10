@@ -689,8 +689,6 @@ export function createConfiguration(config: SnowpackUserConfig = {}): SnowpackCo
   // But, we still need to run it in case you called this function directly.
   const configBase = getConfigBasePath(undefined, config.root);
   resolveRelativeConfig(mergedConfig, configBase);
-  // Normalize & return.
-  console.log(mergedConfig);
   return normalizeConfig(mergedConfig);
 }
 

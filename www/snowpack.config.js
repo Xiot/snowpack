@@ -1,3 +1,4 @@
+/** @type {import("snowpack").SnowpackUserConfig } */
 module.exports = {
   mount: {
     eleventy: '/',
@@ -9,7 +10,7 @@ module.exports = {
     ['@snowpack/plugin-postcss', {}],
   ],
   packageOptions: {
-    /* ... */
+    source: 'skypack',
   },
   devOptions: {
     // Eleventy updates multiple files at once, so add a 1000ms delay before we trigger a browser update
